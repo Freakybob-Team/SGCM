@@ -1,6 +1,6 @@
 import os
 
-# File Operations and more
+# file operations and more
 def write(file_name, mode, content):
     try:
         with open(file_name, mode) as file:
