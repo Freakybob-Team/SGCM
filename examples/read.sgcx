@@ -1,0 +1,16 @@
+import sgcm // import sgc++ module 
+
+var filename = gReadln("type the name of the file you want to read:") // user input grrg
+const check = sgcm.fileExists(filename) // check
+var read = Null // null
+
+// gggg
+if (not check) then
+    gPrintln("no file/no input..")
+    exit(1)
+else
+    read = sgcm.read(filename)
+    gPrintln("found it!!!\n")
+    gPrintln(read)
+end
+
