@@ -1,0 +1,13 @@
+import sgcm // import sgcm
+
+var dir = "a_folder" // a variable with the folder name
+sgcm.dictionaryCreate(dir)// makes it rgeg
+
+var check = sgcm.fileExists(dir)  // see if it exists
+
+// check if it worked
+if (check) then
+    gPrintln("ok") // yayayaya
+else
+    gPrintln("cooked") // (⚆_⚆)
+end
