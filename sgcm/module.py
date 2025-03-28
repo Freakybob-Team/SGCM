@@ -252,7 +252,7 @@ def base64Encode(text):
         encoded_bytes = base64.b64encode(text.encode("utf-8"))
         return encoded_bytes.decode("utf-8")
     except Exception as e:
-        print(f"[ERROR] Base64 encoding failed: {e}")
+        print(f"\033[31m[ERROR] Base64 encoding failed: {e}\033[0m")
         return ""
 
 
@@ -261,7 +261,7 @@ def base64Decode(encoded_text):
         decoded_bytes = base64.b64decode(encoded_text)
         return decoded_bytes.decode("utf-8")
     except Exception as e:
-        print(f"[ERROR] Base64 decoding failed: {e}")
+        print(f"\033[31m[ERROR] Base64 decoding failed: {e}\033[0m")
         return ""
 
 
@@ -280,10 +280,10 @@ def httpGet(url):
         if response.status_code == 200:
             return response.text
         else:
-            print(f"[ERROR] GET request failed with status code {response.status_code}")
+            print(f"\033[31m[ERROR] GET request failed with status code {response.status_code}\033[0m")
             return None
     except requests.RequestException as e:
-        print(f"[ERROR] HTTP GET request failed: {e}")
+        print(f"\033[31m[ERROR] HTTP GET request failed: {e}\033[0m")
         return None
 
 def httpPost(url, data):
@@ -292,10 +292,10 @@ def httpPost(url, data):
         if response.status_code == 200:
             return response.json()
         else:
-            print(f"[ERROR] POST request failed with status code {response.status_code}")
+            print(f"\033[31m[ERROR] POST request failed with status code {response.status_code}\033[0m")
             return None
     except requests.RequestException as e:
-        print(f"[ERROR] HTTP POST request failed: {e}")
+        print(f"\033[31m[ERROR] HTTP POST request failed: {e}\033[0m")
         return None
 
 def urlEncode(text):
