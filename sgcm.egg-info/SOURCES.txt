@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.py
+sgcm/__init__.py
+sgcm/module.py
+sgcm.egg-info/PKG-INFO
+sgcm.egg-info/SOURCES.txt
+sgcm.egg-info/dependency_links.txt
+sgcm.egg-info/top_level.txt
