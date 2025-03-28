@@ -10,7 +10,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Freakybob-Team/SGCM",
     packages=find_packages(),
-    install_requires=[],
+    install_requires=[
+        'requests'
+    ],
     python_requires=">=3.8",
     license="MIT",
     classifiers=[
