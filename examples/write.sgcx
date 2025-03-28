@@ -1,0 +1,13 @@
+import sgcm // import sgc++ module 
+
+var filename = "greg.txt" // the filename
+
+sgcm.write(filename, "w", "wow.. ts is so peak") // makes the file
+const check = sgcm.fileExists(filename) // check if it's real
+
+// if statement for you know
+if (check) then
+    gPrintln("good")
+else
+    gPrintln("smh")
+end
