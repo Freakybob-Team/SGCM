@@ -6,6 +6,7 @@ import datetime
 import base64
 import requests
 import urllib.parse
+import subprocess
 
 # variables
 MORSE_CODE_DICT = {
@@ -169,6 +170,9 @@ def command(cmd):
         os.system(cmd)
     except Exception as e:
         print(f"\033[31m[ERROR] Failed to execute command: {e}\033[0m")
+
+def playAudio(file_path: str) -> None:
+    subprocess.run(["ffplay", "-nodisp", "-autoexit", file_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 # string functions
