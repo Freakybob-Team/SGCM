@@ -21,8 +21,6 @@ def read(file_name):
 def append(file_name, content):
     return write(file_name, 'a', content)
 
-
-
 def file_exists(file_name):
     return os.path.exists(file_name)
 
@@ -49,4 +47,16 @@ def rename(old_name, new_name):
         print(f"[ERROR] Failed to rename file: {e}")
         return False
 
-# END
+
+# python commands
+def printPy(message):
+    print(message)
+
+def inputPy(prompt):
+    return input(prompt)
+
+def execPy(code):
+    try:
+        exec(code)
+    except Exception as e:
+        print(f"[ERROR] Failed to execute code: {e}")
