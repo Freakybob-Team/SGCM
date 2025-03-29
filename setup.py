@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="sgcm",
-    version="0.1.3",
+    version="0.1.1",
     description="A module for the SGC++ coding language!!!",
     author="Freakybob Team",
     author_email="freakybobsite@proton.me",
