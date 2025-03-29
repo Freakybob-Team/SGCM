@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sgcm
-Version: 0.1.0
+Version: 0.1.1
 Summary: A module for the SGC++ coding language!!!
 Home-page: https://github.com/Freakybob-Team/SGCM
 Author: Freakybob Team
@@ -14,6 +14,7 @@ Classifier: Programming Language :: Python :: 3
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: requests
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -23,6 +24,7 @@ Dynamic: home-page
 Dynamic: license
 Dynamic: license-file
 Dynamic: project-url
+Dynamic: requires-dist
 Dynamic: requires-python
 Dynamic: summary
 
