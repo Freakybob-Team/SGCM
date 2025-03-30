@@ -406,10 +406,12 @@ def ferdinhaUpload(file_path=None):
             return None
         return answers['file']
 
-    def loading_spinner():
+    def loading_spinner(stop_event):
         spinner = ['|', '/', '-', '\\', '◜', '◞', '◝', '◞', '◟', '◠', '◡']
-        while True:
+        while not stop_event.is_set():
             for symbol in spinner:
+                if stop_event.is_set():
+                    break
                 sys.stdout.write(f'\rUploading {symbol}       ')
                 sys.stdout.flush()
                 time.sleep(0.1)
@@ -424,8 +426,10 @@ def ferdinhaUpload(file_path=None):
     if not os.path.isfile(full_file_path):
         print(f"File '{file_path}' not found.")
         return
-    
-    spinner_thread = threading.Thread(target=loading_spinner)
+
+    stop_event = threading.Event()
+
+    spinner_thread = threading.Thread(target=loading_spinner, args=(stop_event,))
     spinner_thread.daemon = True 
     spinner_thread.start()
 
@@ -433,6 +437,9 @@ def ferdinhaUpload(file_path=None):
         with open(full_file_path, 'rb') as f:
             files = {'file': f}
             response = requests.post(url, files=files)
+            stop_event.set()
+            spinner_thread.join()
+            
             if response.status_code == 200:
                 print("\rSuccess!                     ")
                 response_data = response.json()
@@ -440,6 +447,8 @@ def ferdinhaUpload(file_path=None):
             else:
                 print(f"\rFailed, error: {response.status_code}                     ")
     except Exception as e:
+        stop_event.set()
+        spinner_thread.join()
         print(f"\rFailed, error: {e}                     ")
 
 def lastFM(api_key, username):
