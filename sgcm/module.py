@@ -11,7 +11,7 @@ import tempfile
 import threading
 import sys
 import time
-import inquirer
+# import inquirer
 import socket
 import tkinter as tk
 from tkinter import ttk, filedialog, colorchooser, messagebox, simpledialog, scrolledtext
@@ -455,32 +455,23 @@ def ferdinhaUpload(file_path=None):
 
 def lastFM(api_key, username):
     BASE_URL = "https://ws.audioscrobbler.com/2.0/"
-
-    def fetch_recent_tracks():
-        try:
-            params = {
-                'method': 'user.getRecentTracks',
-                'api_key': api_key,
-                'user': username,
-                'limit': 5,
-                'format': 'json'
-            }
-
-            response = requests.get(BASE_URL, params=params)
-            response.raise_for_status()
-
-            data = response.json()
-            recent_tracks = data.get('recenttracks', {}).get('track', [])
-            return recent_tracks
-        except requests.exceptions.RequestException as e:
-            print(f"Error fetching recent tracks: {e}")
-            return None
-        except ValueError as e:
-            print(f"Error decoding JSON response: {e}")
-            return None
-        
-
-    return fetch_recent_tracks()
+    try:
+        params = {
+            'method': 'user.getRecentTracks',
+            'api_key': api_key,
+            'user': username,
+            'limit': 5,
+            'format': 'json'
+        }
+        response = requests.get(BASE_URL, params=params)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching recent tracks: {e}")
+        return None
+    except ValueError as e:
+        print(f"Error decoding JSON response: {e}")
+        return None
 
         
 # image stuff
