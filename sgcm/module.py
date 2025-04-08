@@ -11,7 +11,7 @@ import tempfile
 import threading
 import sys
 import time
-# import inquirer
+import inquirer
 import socket
 import tkinter as tk
 from tkinter import ttk, filedialog, colorchooser, messagebox, simpledialog, scrolledtext
