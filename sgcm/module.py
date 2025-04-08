@@ -13,7 +13,9 @@ import sys
 import time
 import inquirer
 import socket
-from PIL import Image
+import tkinter as tk
+from tkinter import ttk, filedialog, colorchooser, messagebox, simpledialog, scrolledtext
+from PIL import Image, ImageTk
 
 # variables
 MORSE_CODE_DICT = {
@@ -498,4 +500,474 @@ def imageResize(img, width, height):
         return resized_img
     except Exception as e:
         print(f"\033[31m[ERROR] Failed to resize image: {e}\033[0m")
+        return None
+    
+    
+# alot of fucking code but for tkinter
+def createWindow(title="Window", width=800, height=600, bg=None, resizable=True, icon=None):
+    try:
+        root = tk.Tk()
+        root.title(title)
+        
+        if isinstance(width, str) and "x" in width:
+            root.geometry(width)
+        else:
+            root.geometry(f"{width}x{height}")
+        
+        if bg:
+            root.configure(bg=bg)
+        
+        if not resizable:
+            root.resizable(False, False)
+            
+        if icon:
+            try:
+                root.iconphoto(True, tk.PhotoImage(file=icon))
+            except Exception as e:
+                print(f"\033[31m[ERROR] Failed to set icon: {e}\033[0m")
+        
+        return root
+        
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create window: {e}\033[0m")
+        return None
+
+def createFrame(parent, bg=None, padding=None, borderwidth=0, relief="flat"):
+    try:
+        frame = ttk.Frame(parent, padding=padding)
+        
+        if bg or borderwidth > 0 or relief != "flat":
+            frame = tk.Frame(
+                parent, 
+                bg=bg, 
+                padx=padding, 
+                pady=padding, 
+                borderwidth=borderwidth, 
+                relief=relief
+            )
+        
+        return frame
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create frame: {e}\033[0m")
+        return None
+
+def runWindow(root):
+    try:
+        root.mainloop()
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to run window: {e}\033[0m")
+
+def closeWindow(window):
+    try:
+        window.destroy()
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to close window: {e}\033[0m")
+
+def addLabel(parent, text="Label", font=None, bg=None, fg=None):
+    try:
+        label = tk.Label(parent, text=text, font=font, bg=bg, fg=fg)
+        return label
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create label: {e}\033[0m")
+        return None
+
+def addButton(parent, text="Button", command=None, width=None, height=None, bg=None, fg=None, font=None):
+    try:
+        button = tk.Button(
+            parent, 
+            text=text, 
+            command=command, 
+            width=width, 
+            height=height, 
+            bg=bg, 
+            fg=fg, 
+            font=font
+        )
+        return button
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create button: {e}\033[0m")
+        return None
+
+def addEntry(parent, default_text="", width=None, show=None, state="normal"):
+    try:
+        entry = tk.Entry(parent, width=width, show=show, state=state)
+        if default_text:
+            entry.insert(0, default_text)
+        return entry
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create entry: {e}\033[0m")
+        return None
+
+def addCheckbox(parent, text="Checkbox", variable=None, command=None):
+    try:
+        if variable is None:
+            variable = tk.BooleanVar()
+        
+        checkbox = tk.Checkbutton(
+            parent, 
+            text=text, 
+            variable=variable, 
+            command=command
+        )
+        return checkbox, variable
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create checkbox: {e}\033[0m")
+        return None, None
+
+def addRadioButton(parent, text="Option", value=1, variable=None, command=None):
+    try:
+        if variable is None:
+            variable = tk.IntVar()
+            
+        radio = tk.Radiobutton(
+            parent, 
+            text=text, 
+            value=value, 
+            variable=variable, 
+            command=command
+        )
+        return radio, variable
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create radio button: {e}\033[0m")
+        return None, None
+
+def addTextArea(parent, default_text="", width=40, height=10, font=None, wrap="word"):
+    try:
+        text_area = scrolledtext.ScrolledText(
+            parent, 
+            width=width, 
+            height=height, 
+            font=font, 
+            wrap=wrap
+        )
+        
+        if default_text:
+            text_area.insert(tk.END, default_text)
+            
+        return text_area
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create text area: {e}\033[0m")
+        return None
+
+def addComboBox(parent, values=None, default_index=0, state="readonly", width=None):
+    try:
+        if values is None:
+            values = []
+            
+        combo = ttk.Combobox(parent, values=values, state=state, width=width)
+        
+        if values and default_index < len(values):
+            combo.current(default_index)
+            
+        return combo
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create combobox: {e}\033[0m")
+        return None
+
+def addListbox(parent, values=None, height=5, width=None, selectmode="single"):
+    try:
+        frame = tk.Frame(parent)
+        scrollbar = tk.Scrollbar(frame, orient="vertical")
+        
+        listbox = tk.Listbox(
+            frame, 
+            height=height, 
+            width=width, 
+            selectmode=selectmode,
+            yscrollcommand=scrollbar.set
+        )
+        
+        scrollbar.config(command=listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
+        if values:
+            for item in values:
+                listbox.insert(tk.END, item)
+                
+        return listbox, frame
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create listbox: {e}\033[0m")
+        return None, None
+
+def addScale(parent, from_=0, to=100, orient="horizontal", variable=None, command=None, resolution=1):
+    try:
+        if variable is None:
+            variable = tk.DoubleVar()
+            variable.set(from_)
+            
+        scale = tk.Scale(
+            parent,
+            from_=from_,
+            to=to,
+            orient=orient,
+            variable=variable,
+            command=command,
+            resolution=resolution
+        )
+        
+        return scale, variable
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create scale: {e}\033[0m")
+        return None, None
+
+def addProgressBar(parent, mode="determinate", length=200, orient="horizontal"):
+    try:
+        progress = ttk.Progressbar(
+            parent,
+            mode=mode,
+            length=length,
+            orient=orient
+        )
+        
+        return progress
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create progress bar: {e}\033[0m")
+        return None
+
+def addSpinbox(parent, from_=0, to=100, increment=1, width=None, command=None):
+    try:
+        var = tk.StringVar()
+        var.set(from_)
+        
+        spinbox = tk.Spinbox(
+            parent,
+            from_=from_,
+            to=to,
+            increment=increment,
+            textvariable=var,
+            width=width,
+            command=command
+        )
+        
+        return spinbox, var
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create spinbox: {e}\033[0m")
+        return None, None
+
+def addCanvas(parent, width=400, height=300, bg="white"):
+    try:
+        canvas = tk.Canvas(parent, width=width, height=height, bg=bg)
+        return canvas
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create canvas: {e}\033[0m")
+        return None
+
+def addTabs(parent):
+    try:
+        notebook = ttk.Notebook(parent)
+        return notebook
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create notebook: {e}\033[0m")
+        return None
+
+def addTab(notebook, title="Tab"):
+    try:
+        tab = ttk.Frame(notebook)
+        notebook.add(tab, text=title)
+        return tab
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to add tab: {e}\033[0m")
+        return None
+
+def addImage(parent, image_path, width=None, height=None):
+    try:
+        image = Image.open(image_path)
+        
+        if width and height:
+            image = image.resize((width, height), Image.LANCZOS)
+            
+        photo = ImageTk.PhotoImage(image)
+        label = tk.Label(parent, image=photo)
+        label.image = photo
+        
+        return label, photo
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to add image: {e}\033[0m")
+        return None, None
+
+def addMenu(root):
+    try:
+        menu_bar = tk.Menu(root)
+        root.config(menu=menu_bar)
+        return menu_bar
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create menu bar: {e}\033[0m")
+        return None
+
+def addSubMenu(menu_bar, label="Menu"):
+    try:
+        submenu = tk.Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label=label, menu=submenu)
+        return submenu
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to create submenu: {e}\033[0m")
+        return None
+
+def addMenuItem(menu, label="Item", command=None, accelerator=None):
+    try:
+        menu.add_command(label=label, command=command, accelerator=accelerator)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to add menu item: {e}\033[0m")
+
+def addMenuSeparator(menu):
+
+    try:
+        menu.add_separator()
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to add menu separator: {e}\033[0m")
+
+def addScrollbar(parent, widget, orient="vertical"):
+    try:
+        scrollbar = tk.Scrollbar(parent, orient=orient)
+        
+        if orient == "vertical":
+            widget.config(yscrollcommand=scrollbar.set)
+            scrollbar.config(command=widget.yview)
+        else:
+            widget.config(xscrollcommand=scrollbar.set)
+            scrollbar.config(command=widget.xview)
+            
+        return scrollbar
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to add scrollbar: {e}\033[0m")
+        return None
+
+def packWidget(widget, side="top", fill="none", expand=False, padx=0, pady=0):
+    try:
+        widget.pack(
+            side=side,
+            fill=fill,
+            expand=expand,
+            padx=padx,
+            pady=pady
+        )
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to pack widget: {e}\033[0m")
+
+def gridWidget(widget, row=0, column=0, rowspan=1, columnspan=1, sticky="", padx=0, pady=0):
+    try:
+        widget.grid(
+            row=row,
+            column=column,
+            rowspan=rowspan,
+            columnspan=columnspan,
+            sticky=sticky,
+            padx=padx,
+            pady=pady
+        )
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to grid widget: {e}\033[0m")
+
+def placeWidget(widget, x=0, y=0, relx=None, rely=None, width=None, height=None, relwidth=None, relheight=None):
+    try:
+        place_args = {'x': x, 'y': y}
+        
+        if relx is not None:
+            place_args['relx'] = relx
+        if rely is not None:
+            place_args['rely'] = rely
+        if width is not None:
+            place_args['width'] = width
+        if height is not None:
+            place_args['height'] = height
+        if relwidth is not None:
+            place_args['relwidth'] = relwidth
+        if relheight is not None:
+            place_args['relheight'] = relheight
+            
+        widget.place(**place_args)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to place widget: {e}\033[0m")
+
+def showMessageBox(title="Message", message="", icon="info"):
+    try:
+        if icon == "info":
+            return messagebox.showinfo(title, message)
+        elif icon == "warning":
+            return messagebox.showwarning(title, message)
+        elif icon == "error":
+            return messagebox.showerror(title, message)
+        elif icon == "question":
+            return messagebox.askquestion(title, message)
+        else:
+            return messagebox.showinfo(title, message)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show message box: {e}\033[0m")
+        return None
+
+def showConfirmBox(title="Confirm", message="Are you sure?"):
+    try:
+        return messagebox.askyesno(title, message)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show confirm box: {e}\033[0m")
+        return False
+
+def showInputBox(title="Input", prompt="Enter value:"):
+    try:
+        return simpledialog.askstring(title, prompt)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show input box: {e}\033[0m")
+        return None
+
+def showFileOpenDialog(title="Open File", filetypes=(("All files", "*.*"),)):
+    try:
+        return filedialog.askopenfilename(title=title, filetypes=filetypes)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show file open dialog: {e}\033[0m")
+        return ""
+
+def showFileSaveDialog(title="Save File", defaultextension=".txt", filetypes=(("All files", "*.*"),)):
+    try:
+        return filedialog.asksaveasfilename(
+            title=title, 
+            defaultextension=defaultextension, 
+            filetypes=filetypes
+        )
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show file save dialog: {e}\033[0m")
+        return ""
+
+def showDirectoryDialog(title="Select Directory"):
+    try:
+        return filedialog.askdirectory(title=title)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show directory dialog: {e}\033[0m")
+        return ""
+
+def showColorDialog(title="Select Color", initial=None):
+    try:
+        color = colorchooser.askcolor(title=title, initialcolor=initial)
+        return color[1]
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to show color dialog: {e}\033[0m")
+        return None
+
+def bindEvent(widget, event, callback):
+    try:
+        widget.bind(event, callback)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to bind event: {e}\033[0m")
+
+def afterDelay(root, delay_ms, callback):
+    try:
+        return root.after(delay_ms, callback)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to set delay: {e}\033[0m")
+        return None
+
+def cancelDelay(root, timer_id):
+    try:
+        root.after_cancel(timer_id)
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to cancel delay: {e}\033[0m")
+
+def runInBackground(callback, *args, **kwargs):
+    try:
+        thread = threading.Thread(target=callback, args=args, kwargs=kwargs)
+        thread.daemon = True
+        thread.start()
+        return thread
+    except Exception as e:
+        print(f"\033[31m[ERROR] Failed to run in background: {e}\033[0m")
         return None
